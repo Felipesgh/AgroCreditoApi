@@ -20,6 +20,8 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\AgroCredito.Api\AgroCredito.Api.csproj" />
+    <ProjectReference Include="..\..\src\AgroCredito.Infrastructure\AgroCredito.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\src\AgroCredito.Application\AgroCredito.Application.csproj" />
   </ItemGroup>
 
 </Project>
