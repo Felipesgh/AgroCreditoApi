@@ -1,4 +1,6 @@
-﻿using AgroCredito.Infrastructure;
+﻿using AgroCredito.Application;
+using AgroCredito.Application.Services;
+using AgroCredito.Infrastructure;
 using AgroCredito.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -7,6 +9,7 @@ var builder = WebApplication.CreateBuilder(args);
 var connectionString = builder.Configuration.GetConnectionString("Default")
     ?? throw new InvalidOperationException("ConnectionStrings:Default não configurada (use user-secrets).");
 
+builder.Services.AddApplication();
 builder.Services.AddInfrastructure(connectionString);
 
 var app = builder.Build();
@@ -17,11 +20,7 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-// Rota provisória só para conferir que o banco e o seed funcionam (será substituída na Etapa 4)
-app.MapGet("/", async (AgroCreditoDbContext db) => new
-{
-    api = "AgroCredito",
-    oportunidades = await db.Oportunidades.CountAsync()
-});
+// Rota provisória para validar Application + repositórios + Oracle (será substituída na Etapa 6)
+app.MapGet("/", async (OportunidadeService oportunidades) => await oportunidades.ListAsync(null));
 
 app.Run();
