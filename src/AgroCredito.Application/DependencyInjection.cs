@@ -11,6 +11,7 @@ public static class DependencyInjection
         services.AddScoped<IElegibilidadeDomainService, ElegibilidadeDomainService>();
         services.AddScoped<ISimuladorFinanciamentoDomainService, SimuladorFinanciamentoDomainService>();
 
+        services.AddScoped<AuthService>();
         services.AddScoped<PropriedadeService>();
         services.AddScoped<OportunidadeService>();
         services.AddScoped<RecomendacaoService>();
