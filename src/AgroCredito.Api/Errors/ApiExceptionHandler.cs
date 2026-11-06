@@ -12,6 +12,7 @@ public sealed class ApiExceptionHandler(IProblemDetailsService problemDetails) :
     {
         var (status, titulo) = exception switch
         {
+            BadHttpRequestException => (StatusCodes.Status400BadRequest, "Requisição inválida"),
             ValidationException => (StatusCodes.Status400BadRequest, "Dados inválidos"),
             InvalidCredentialsException => (StatusCodes.Status401Unauthorized, "Credenciais inválidas"),
             NotFoundException => (StatusCodes.Status404NotFound, "Recurso não encontrado"),
@@ -23,11 +24,15 @@ public sealed class ApiExceptionHandler(IProblemDetailsService problemDetails) :
         if (status == 0)
             return false; // erro inesperado: o ASP.NET responde 500
 
+        var detalhe = exception is BadHttpRequestException
+            ? "A requisição está mal formada (JSON inválido ou parâmetro com tipo incorreto)."
+            : exception.Message;
+
         var problema = new ProblemDetails
         {
             Status = status,
             Title = titulo,
-            Detail = exception.Message
+            Detail = detalhe
         };
 
         if (exception is ValidationException validacao)
