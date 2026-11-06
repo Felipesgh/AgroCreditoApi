@@ -15,6 +15,7 @@ public class OportunidadeConfiguration : IEntityTypeConfiguration<Oportunidade>
         builder.Property(o => o.Instituicao).IsRequired().HasMaxLength(150);
         builder.Property(o => o.Descricao).IsRequired().HasMaxLength(1000);
         builder.Property(o => o.FonteOficial).HasMaxLength(500);
+        builder.Property(o => o.Ativa).HasConversion<int>();
         builder.Property(o => o.TaxaJurosAnual).HasPrecision(5, 2);
         builder.Property(o => o.ValorMaximo).HasPrecision(18, 2);
         builder.Property(o => o.Estado).HasMaxLength(2);
@@ -25,3 +26,4 @@ public class OportunidadeConfiguration : IEntityTypeConfiguration<Oportunidade>
         builder.HasData(SeedData.Oportunidades);
     }
 }
+
