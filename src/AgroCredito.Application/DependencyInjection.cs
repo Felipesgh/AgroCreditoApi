@@ -8,6 +8,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        services.AddSingleton(TimeProvider.System);
+
         services.AddScoped<IElegibilidadeDomainService, ElegibilidadeDomainService>();
         services.AddScoped<ISimuladorFinanciamentoDomainService, SimuladorFinanciamentoDomainService>();
 
@@ -16,6 +18,7 @@ public static class DependencyInjection
         services.AddScoped<OportunidadeService>();
         services.AddScoped<RecomendacaoService>();
         services.AddScoped<SimulacaoService>();
+        services.AddScoped<IdempotencyService>();
 
         return services;
     }
