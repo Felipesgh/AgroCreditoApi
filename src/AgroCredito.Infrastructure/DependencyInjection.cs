@@ -18,6 +18,7 @@ public static class DependencyInjection
         services.AddScoped<IPropriedadeRepository, PropriedadeRepository>();
         services.AddScoped<IOportunidadeRepository, OportunidadeRepository>();
         services.AddScoped<ISimulacaoRepository, SimulacaoRepository>();
+        services.AddScoped<IIdempotencyStore, IdempotencyStore>();
 
         services.AddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
 
