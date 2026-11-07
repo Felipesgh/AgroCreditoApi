@@ -22,6 +22,48 @@ namespace AgroCredito.Infrastructure.Persistence.Migrations
 
             OracleModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
+            modelBuilder.Entity("AgroCredito.Domain.Entities.IdempotencyRecord", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("NUMBER(10)");
+
+                    OraclePropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<DateTime>("CriadaEm")
+                        .HasColumnType("TIMESTAMP(7)");
+
+                    b.Property<string>("IdempotencyKey")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("NVARCHAR2(100)");
+
+                    b.Property<string>("Location")
+                        .HasMaxLength(500)
+                        .HasColumnType("NVARCHAR2(500)");
+
+                    b.Property<int>("ProdutorId")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.Property<string>("RequestHash")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("NVARCHAR2(64)");
+
+                    b.Property<string>("ResponseBody")
+                        .HasColumnType("NCLOB");
+
+                    b.Property<int?>("StatusCode")
+                        .HasColumnType("NUMBER(10)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ProdutorId", "IdempotencyKey")
+                        .IsUnique();
+
+                    b.ToTable("IdempotencyRecords", (string)null);
+                });
+
             modelBuilder.Entity("AgroCredito.Domain.Entities.Oportunidade", b =>
                 {
                     b.Property<int>("Id")
