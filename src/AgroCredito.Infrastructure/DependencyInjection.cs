@@ -1,4 +1,5 @@
 ﻿using AgroCredito.Application.Abstractions;
+using AgroCredito.Infrastructure.Auth;
 using AgroCredito.Infrastructure.Persistence;
 using AgroCredito.Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -13,9 +14,12 @@ public static class DependencyInjection
         services.AddDbContext<AgroCreditoDbContext>(options => options.UseOracle(connectionString));
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+        services.AddScoped<IProdutorRepository, ProdutorRepository>();
         services.AddScoped<IPropriedadeRepository, PropriedadeRepository>();
         services.AddScoped<IOportunidadeRepository, OportunidadeRepository>();
         services.AddScoped<ISimulacaoRepository, SimulacaoRepository>();
+
+        services.AddSingleton<IPasswordHasher, Pbkdf2PasswordHasher>();
 
         return services;
     }
