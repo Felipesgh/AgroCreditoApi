@@ -1,5 +1,6 @@
 ﻿using AgroCredito.Api.Endpoints;
 using AgroCredito.Api.Errors;
+using AgroCredito.Api.RateLimiting;
 using AgroCredito.Api.Swagger;
 using AgroCredito.Application;
 using AgroCredito.Infrastructure;
@@ -21,6 +22,7 @@ builder.Services.AddApplication();
 builder.Services.AddInfrastructure(connectionString);
 builder.Services.AddJwtAuthentication(jwt);
 builder.Services.AddAuthorization();
+builder.Services.AddApiRateLimiting(builder.Configuration.GetSection("RateLimiting").Get<RateLimitingOptions>() ?? new RateLimitingOptions());
 
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
@@ -59,6 +61,7 @@ app.UseSwaggerUI(options =>
 });
 
 app.UseAuthentication();
+app.UseRateLimiter();
 app.UseAuthorization();
 
 using (var scope = app.Services.CreateScope())
