@@ -1,4 +1,5 @@
-﻿using AgroCredito.Application.DTOs;
+﻿using AgroCredito.Api.RateLimiting;
+using AgroCredito.Application.DTOs;
 using AgroCredito.Application.Services;
 
 namespace AgroCredito.Api.Endpoints;
@@ -7,7 +8,9 @@ public static class AuthEndpoints
 {
     public static IEndpointRouteBuilder MapAuthEndpoints(this IEndpointRouteBuilder app)
     {
-        var group = app.MapGroup("/api/auth").WithTags("Autenticação");
+        var group = app.MapGroup("/api/auth")
+            .WithTags("Autenticação")
+            .RequireRateLimiting(RateLimitingExtensions.AuthPolicy);
 
         group.MapPost("/register", async (RegisterRequest request, AuthService auth, CancellationToken ct) =>
             {
@@ -18,7 +21,8 @@ public static class AuthEndpoints
             .WithSummary("Cadastra um novo produtor")
             .Produces<ProdutorResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status409Conflict);
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status429TooManyRequests);
 
         group.MapPost("/login", async (LoginRequest request, AuthService auth, CancellationToken ct) =>
                 TypedResults.Ok(await auth.LoginAsync(request, ct)))
@@ -26,7 +30,8 @@ public static class AuthEndpoints
             .WithSummary("Autentica o produtor e devolve o token JWT")
             .Produces<TokenResponse>()
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status401Unauthorized);
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status429TooManyRequests);
 
         return app;
     }
