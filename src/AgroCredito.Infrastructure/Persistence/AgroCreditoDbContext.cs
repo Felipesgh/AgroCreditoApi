@@ -10,6 +10,7 @@ public class AgroCreditoDbContext(DbContextOptions<AgroCreditoDbContext> options
     public DbSet<Oportunidade> Oportunidades => Set<Oportunidade>();
     public DbSet<RequisitoDocumento> RequisitosDocumento => Set<RequisitoDocumento>();
     public DbSet<Simulacao> Simulacoes => Set<Simulacao>();
+    public DbSet<IdempotencyRecord> IdempotencyRecords => Set<IdempotencyRecord>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
