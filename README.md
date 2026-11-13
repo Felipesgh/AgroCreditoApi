@@ -263,3 +263,7 @@ O app Mobile consome esta API para **todas** as funcionalidades, inclusive cadas
 5. **Erros:** o corpo é JSON com `title` e `detail` (e `errors` na validação), para mostrar mensagens por campo.
 6. **POST que cria dados:** envie `Idempotency-Key` para evitar duplicidade em caso de nova tentativa.
 7. **429:** respeite o header `Retry-After` antes de tentar de novo.
+
+## Deploy
+
+API publicada em: https://agrocreditoapi.onrender.com (Swagger em `/swagger`).
