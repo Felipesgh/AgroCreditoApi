@@ -1,5 +1,8 @@
+﻿using System.Text.Json.Serialization;
+
 namespace AgroCredito.Domain.Enums;
 
+[JsonConverter(typeof(JsonStringEnumConverter))]
 public enum TipoProducao
 {
     Agricultura = 1,
