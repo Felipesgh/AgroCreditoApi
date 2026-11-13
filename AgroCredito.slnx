@@ -7,6 +7,7 @@
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/AgroCredito.Api.Tests/AgroCredito.Api.Tests.csproj" />
+    <Project Path="tests/AgroCredito.Application.Tests/AgroCredito.Application.Tests.csproj" />
     <Project Path="tests/AgroCredito.Domain.Tests/AgroCredito.Domain.Tests.csproj" />
   </Folder>
 </Solution>
