@@ -69,7 +69,10 @@ app.UseAuthorization();
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AgroCreditoDbContext>();
-    db.Database.Migrate();
+    if (db.Database.IsRelational())
+        db.Database.Migrate();
+    else
+        db.Database.EnsureCreated(); // banco em memoria (usado so nos testes)
 }
 
 app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
@@ -82,3 +85,6 @@ app.MapRecomendacaoEndpoints();
 app.MapSimulacaoEndpoints();
 
 app.Run();
+
+public partial class Program { }
+
