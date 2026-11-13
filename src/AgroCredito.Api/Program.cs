@@ -1,5 +1,6 @@
 ﻿using AgroCredito.Api.Endpoints;
 using AgroCredito.Api.Errors;
+using AgroCredito.Api.HealthChecks;
 using AgroCredito.Api.RateLimiting;
 using AgroCredito.Api.Swagger;
 using AgroCredito.Application;
@@ -25,6 +26,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddApiRateLimiting(builder.Configuration.GetSection("RateLimiting").Get<RateLimitingOptions>() ?? new RateLimitingOptions());
 
 builder.Services.AddProblemDetails();
+builder.Services.AddApiHealthChecks(builder.Configuration.GetSection("HealthChecks:ExternalService").Get<ExternalServiceOptions>() ?? new ExternalServiceOptions());
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 
 builder.Services.AddEndpointsApiExplorer();
@@ -71,6 +73,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
+app.MapApiHealthChecks();
 app.MapAuthEndpoints();
 app.MapProdutorEndpoints();
 app.MapOportunidadeEndpoints();
