@@ -1,6 +1,8 @@
 ﻿using System.Security.Claims;
+using AgroCredito.Api.Idempotency;
 using AgroCredito.Application.DTOs;
 using AgroCredito.Application.Services;
+using Microsoft.AspNetCore.Mvc;
 
 namespace AgroCredito.Api.Endpoints;
 
@@ -27,16 +29,25 @@ public static class PropriedadeEndpoints
             .ProducesProblem(StatusCodes.Status401Unauthorized)
             .ProducesProblem(StatusCodes.Status404NotFound);
 
-        group.MapPost("/", async (PropriedadeRequest request, ClaimsPrincipal user, PropriedadeService service, CancellationToken ct) =>
+        group.MapPost("/", async (
+                [FromHeader(Name = "Idempotency-Key")] string? idempotencyKey,
+                PropriedadeRequest request,
+                ClaimsPrincipal user,
+                PropriedadeService service,
+                CancellationToken ct) =>
             {
                 var criada = await service.CreateAsync(user.GetProdutorId(), request, ct);
                 return TypedResults.Created($"/api/propriedades/{criada.Id}", criada);
             })
+            .AddEndpointFilter<IdempotencyFilter>()
             .WithName("CriarPropriedade")
             .WithSummary("Cadastra uma propriedade")
+            .WithDescription("Envie o header Idempotency-Key (ex.: um GUID) para que repetir a requisição não crie a propriedade duas vezes.")
             .Produces<PropriedadeResponse>(StatusCodes.Status201Created)
             .ProducesProblem(StatusCodes.Status400BadRequest)
-            .ProducesProblem(StatusCodes.Status401Unauthorized);
+            .ProducesProblem(StatusCodes.Status401Unauthorized)
+            .ProducesProblem(StatusCodes.Status409Conflict)
+            .ProducesProblem(StatusCodes.Status422UnprocessableEntity);
 
         group.MapPut("/{id}", async (int id, PropriedadeRequest request, ClaimsPrincipal user, PropriedadeService service, CancellationToken ct) =>
                 TypedResults.Ok(await service.UpdateAsync(id, user.GetProdutorId(), request, ct)))
