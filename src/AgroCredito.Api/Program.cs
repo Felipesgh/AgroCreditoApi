@@ -1,10 +1,12 @@
 ﻿using AgroCredito.Api.Endpoints;
 using AgroCredito.Api.Errors;
+using AgroCredito.Api.Swagger;
 using AgroCredito.Application;
 using AgroCredito.Infrastructure;
 using AgroCredito.Infrastructure.Auth;
 using AgroCredito.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.OpenApi;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,9 +25,39 @@ builder.Services.AddAuthorization();
 builder.Services.AddProblemDetails();
 builder.Services.AddExceptionHandler<ApiExceptionHandler>();
 
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo
+    {
+        Title = "AgroCrédito API",
+        Version = "v1",
+        Description = "API que conecta pequenos produtores rurais a crédito, seguros e programas de incentivo (CitizenTech - Global Solution 2026/2)."
+    });
+
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.Http,
+        Scheme = "bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "Informe o token JWT obtido em POST /api/auth/login."
+    });
+    options.DocumentFilter<AuthorizeDocumentFilter>();
+});
+
 var app = builder.Build();
 
 app.UseExceptionHandler();
+
+app.UseSwagger();
+app.UseSwaggerUI(options =>
+{
+    options.SwaggerEndpoint("/swagger/v1/swagger.json", "AgroCrédito API v1");
+    options.RoutePrefix = "swagger";
+});
+
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -35,8 +67,12 @@ using (var scope = app.Services.CreateScope())
     db.Database.Migrate();
 }
 
-app.MapGet("/", () => new { api = "AgroCredito", status = "online" });
+app.MapGet("/", () => Results.Redirect("/swagger")).ExcludeFromDescription();
 app.MapAuthEndpoints();
 app.MapProdutorEndpoints();
+app.MapOportunidadeEndpoints();
+app.MapPropriedadeEndpoints();
+app.MapRecomendacaoEndpoints();
+app.MapSimulacaoEndpoints();
 
 app.Run();
