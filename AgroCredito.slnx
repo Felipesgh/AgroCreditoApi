@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/AgroCredito.Api/AgroCredito.Api.csproj" />
+    <Project Path="src/AgroCredito.Application/AgroCredito.Application.csproj" />
+    <Project Path="src/AgroCredito.Domain/AgroCredito.Domain.csproj" />
+    <Project Path="src/AgroCredito.Infrastructure/AgroCredito.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/AgroCredito.Api.Tests/AgroCredito.Api.Tests.csproj" />
+    <Project Path="tests/AgroCredito.Domain.Tests/AgroCredito.Domain.Tests.csproj" />
+  </Folder>
+</Solution>
